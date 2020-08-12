@@ -108,7 +108,7 @@ end
                  6
                end
     elsif int1 == int2 && [1, 3, 2, 6, 7].include?(int1)
-      def PokerDeterm.duplicate_count(array)
+      def Poker.duplicate_count(array)
         array.each_with_object(Hash.new(0)) do |value, hash|
           hash[value] += 1
         end.each_with_object([]) do |(value, count), result|
@@ -116,19 +116,19 @@ end
         end
       end
 
-      if PokerDeterm.duplicate_count(total_value1.map(&:to_i)).max < PokerDeterm.duplicate_count(total_value2.map(&:to_i)).max
+      if Poker.duplicate_count(total_value1.map(&:to_i)).max < Poker.duplicate_count(total_value2.map(&:to_i)).max
         result = 2
-      elsif PokerDeterm.duplicate_count(total_value1.map(&:to_i)).max > PokerDeterm.duplicate_count(total_value2.map(&:to_i)).max
+      elsif Poker.duplicate_count(total_value1.map(&:to_i)).max > Poker.duplicate_count(total_value2.map(&:to_i)).max
         result = 3
-      elsif PokerDeterm.duplicate_count(total_value1.map(&:to_i)).min < PokerDeterm.duplicate_count(total_value2.map(&:to_i)).min
+      elsif Poker.duplicate_count(total_value1.map(&:to_i)).min < Poker.duplicate_count(total_value2.map(&:to_i)).min
         result = 2
-      elsif PokerDeterm.duplicate_count(total_value1.map(&:to_i)).min > PokerDeterm.duplicate_count(total_value2.map(&:to_i)).min
+      elsif Poker.duplicate_count(total_value1.map(&:to_i)).min > Poker.duplicate_count(total_value2.map(&:to_i)).min
         result = 3
       else
         part1 = total_value1.map(&:to_i)
         part2 = total_value2.map(&:to_i)
-        full1 = PokerDeterm.duplicate_count(total_value1.map(&:to_i))
-        full2 = PokerDeterm.duplicate_count(total_value2.map(&:to_i))
+        full1 = Poker.duplicate_count(total_value1.map(&:to_i))
+        full2 = Poker.duplicate_count(total_value2.map(&:to_i))
 
         arr = []
         a = ((part1 - full1) | (full1 - part1)).sort.reverse

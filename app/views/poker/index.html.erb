@@ -1,0 +1,165 @@
+<% if @cash.to_i <= 0 %>
+   <h1>You lost this Poker Game</h1>
+   <a href="/" class="btn btn-light">Let's try again?</a>
+   <img style="padding-bottom:5px;margin-top:10px;width:100%;" src="/images/bluff2.jpg" alt="Poker onRails" />
+<% elsif @cash.to_i >= 200 %>
+   <h1>You won this Poker Game</h1>
+   <a href="/" class="btn btn-light">Let's try again?</a>
+   <img style="padding-bottom:5px;margin-top:10px;width:100%;" src="/images/bluff3.jpg" alt="Poker onRails" />
+<% elsif params[:enter].present? %>
+<form method="POST">
+   <%= token_tag %>
+   <% if params[:secondroll] == "1" %>
+   <div class="card">
+      <div class="card-body">
+         <h1>Second roll. Bankroll: $<%= @cash %></h1>
+      </div>
+   </div>
+   <% @secondroll = "0" %>
+   <% else %>
+   <div class="card">
+      <div class="card-body">
+         <h1>First roll. Bankroll: $<%= @cash %></h1>
+      </div>
+   </div>
+   <% end %>
+   <table class="table-responsive table-bordered" style="background-color: #357d35;">
+      <tbody>
+         <tr>
+            <% @total1.each_with_index do |line1, index| %>
+            <td>
+               <% if params[:secondroll] == "0" or params[:secondroll].nil? %>
+               <ul data-liffect="starwars">
+                  <li><% concat image_tag("/images/underside.png", :class => "img-fluid") %></li>
+               </ul>
+               <% @secondroll = "1" %>
+               <% if @ind_doubl.include? index %>
+               <input type='checkbox' class="rounded mx-auto d-block" onclick="return false" checked="checked" name='keepit1[<%= index %>]' value='<%= line1 %>'>
+               <% else %>
+               <input type='checkbox' class="rounded mx-auto d-block" disabled="disabled" name='keepit1[<%= index %>]' value='<%= line1 %>'>
+               <% end %>
+               <%= hidden_field_tag :array_card1, @total1 %>
+               <% else %>
+               <ul data-liffect="zoomOut">
+                  <li><% concat image_tag("/images/#{line1.first}/#{line1.split(",").last}.png", :class => "img-fluid") %></li>
+               </ul>
+               <% end %>
+            </td>
+            <% end %>
+         </tr>
+         <% if params[:yesno] == 'showdown' or params[:secondroll] != "1" %>
+         <tr>
+            <% @total2.each_with_index do |line2, index| %>
+            <td>
+               <ul data-liffect="zoomOut">
+                  <li><% concat image_tag("/images/#{line2.first}/#{line2.split(",").last}.png", :class => "img-fluid") %></li>
+               </ul>
+               <% if params[:secondroll] == "0" or params[:secondroll].nil? %>
+               <% @secondroll = "1" %>
+               <%= hidden_field_tag :array_card2, @total2 %>
+               <input type='checkbox' class="rounded mx-auto d-block" name='keepit2[<%= index %>]' value='<%= line2 %>'>
+               <% end %>
+            </td>
+            <% end %>
+         </tr>
+         <% end %>
+      </tbody>
+      <tr>
+         <td colspan="5">
+            <div class="d-flex justify-content-center my-sm-3">
+               <% if params[:secondroll] == "0" or params[:secondroll].nil? %>
+               <div>
+                  <div class="brd"><input type="radio" onclick="javascript:yesnoCheck();" name="yesno" id="yesCheck" value="showdown"> Showdown
+                  </div>
+                  <div class="brd"><input type="radio" onclick="javascript:yesnoCheck();" name="yesno" id="yesCheck" value="fold"> Fold
+                  </div>
+                  <div id="ifYes" style="display:none;">
+                     <input type="submit" value="Send form data">
+                  </div>
+               </div>
+               <% else %>
+               <input type="submit" value="Send form data">
+               <% end %>
+               <%= hidden_field_tag :cash, @cash %>
+            </div>
+         </td>
+      </tr>
+   </table>
+   <%= hidden_field_tag :secondroll, @secondroll %><%= hidden_field_tag :enter, 'enter' %>
+</form>
+<script type="text/javascript" src="/javascripts/lib/liffect.js"></script>
+<% else %>
+<h1 class="display-4">
+   Poker Classic OnRails
+</h1>
+<p class="lead">
+   Masterpro.ws project
+</p>
+<div style="font-size:0.8em;">
+<p class="help-block">*Link to an article <a href="https://masterpro.ws/poker-autumn-melancholy" target="_blank">Poker. Autumn Melancholy</a>.</p>
+</div>
+<img style="padding-bottom:5px;margin-top:10px;width:100%;" src="/images/bluff.jpg" alt="Poker onRails" />
+<form method="POST">
+   <%= token_tag %>
+   <%= hidden_field_tag :enter, 'enter' %>
+   <input type="submit" class="btn btn-light pull-right" value="Start the game">
+</form>
+<button type="button" class="btn btn-light pull-right" data-toggle="modal" data-target="#Modal">
+Poker Hands
+</button>
+<div class="modal fade" id="Modal">
+   <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h1 class="modal-title">Poker Hands</h1>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+         </div>
+         <div class="modal-body-poker">
+            <ol>
+               <li>
+                  <h4>Royal Flush</h4>
+                  <p>The best possible hand in Texas hold'em is the combination of ten, jack, queen, king, ace, all of the same suit.</p>
+               </li>
+               <li>
+                  <h4>Straight Flush</h4>
+                  <p>Five cards of the same suit in sequential order.</p>
+               </li>
+               <li>
+                  <h4>Four Of A Kind</h4>
+                  <p>Any four numerically matching cards.</p>
+               </li>
+               <li>
+                  <h4>Full House</h4>
+                  <p>Combination of three of a kind and a pair in the same hand.</p>
+               </li>
+               <li>
+                  <h4>Flush</h4>
+                  <p>Five cards of the same suit, in any order.</p>
+               </li>
+               <li>
+                  <h4>Straight</h4>
+                  <p>Five cards of any suit, in sequential order.</p>
+               </li>
+               <li>
+                  <h4>Three Of A Kind</h4>
+                  <p>Any three numerically matching cards.</p>
+               </li>
+               <li>
+                  <h4>Two Pair</h4>
+                  <p>Two different pairs in the same hand.</p>
+               </li>
+               <li>
+                  <h4>One Pair</h4>
+                  <p>Any two numerically matching cards.</p>
+               </li>
+               <li>
+                  <h4>High card</h4>
+                  <p>Any hand that does not qualify under a category listed above.</p>
+               </li>
+            </ol>
+         </div>
+      </div>
+   </div>
+</div>
+<% end %>
+<script src="/javascripts/lib/radiocheck.js"></script>

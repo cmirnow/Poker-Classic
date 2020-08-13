@@ -44,44 +44,36 @@ class PokerController < ApplicationController
 
     if params[:secondroll] == '1'
       if params[:yesno] == 'showdown'
-        int1 = Poker.counter(@total1)
-        int2 = Poker.counter(@total2)
-        poker_hands = [
-          'Nothing',
-          'One Pair',
-          'Two Pair!',
-          'Three Of A Kind!',
-          'Straight!',
-          'Flush!',
-          'Full House!',
-          'Four Of A Kind!',
-          'Straight Flush!',
-          'Royal Flush!'
-        ]
-        flash.now[:notice] = 'Casino: ' + poker_hands[int1]
-        flash.now[:warning] = 'You: ' + poker_hands[int2]
-        result = Poker.postcount(@total1, @total2, int1, int2)
-        bet_result = [
-          'You won this bet.',
-          'You lost this bet.',
-          'High card! You won this bet.',
-          'High card! You lost this bet.',
-          'Kicker! You won this bet.',
-          'Kicker! You lost this bet.',
-          'Split the pot.'
-        ][result]
-
-        if result.odd?
-          flash.now[:error] = bet_result
-          @cash = params[:cash].to_i - 40
-        else
-          flash.now[:success] = bet_result
-          @cash = params[:cash].to_i + 40
-        end
+        arr = Poker.calculations(@total1, @total2)
+        flash_messages(arr[2], arr[3])
+        @cash = cash(arr[0], arr[1], params[:cash])
       elsif params[:yesno] == 'fold'
-        flash.now[:error] = 'Fold. You bet $20.'
-        @cash = params[:cash].to_i - 20
+        @cash = cash_if_fold(params[:cash])
       end
     end
+  end
+
+  def cash(result, bet_result, params_cash)
+    if result.odd?
+      flash.now[:error] = bet_result
+      params_cash.to_i - 40
+    else
+      flash.now[:success] = bet_result
+      params_cash.to_i + 40
+    end
+  end
+
+  def cash_if_fold(params_cash)
+    flash_if_fold
+    params_cash.to_i - 20
+  end
+
+  def flash_if_fold
+    flash.now[:error] = 'Fold. You bet $20.'
+  end
+
+  def flash_messages(int1, int2)
+    flash.now[:notice] = 'Casino: ' + Poker.poker_hands[int1]
+    flash.now[:warning] = 'You: ' + Poker.poker_hands[int2]
   end
 end

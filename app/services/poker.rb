@@ -1,4 +1,39 @@
 class Poker
+  def self.total_bet
+    [
+      'You won this bet.',
+      'You lost this bet.',
+      'High card! You won this bet.',
+      'High card! You lost this bet.',
+      'Kicker! You won this bet.',
+      'Kicker! You lost this bet.',
+      'Split the pot.'
+    ]
+  end
+
+  def self.poker_hands
+    [
+      'Nothing',
+      'One Pair',
+      'Two Pair!',
+      'Three Of A Kind!',
+      'Straight!',
+      'Flush!',
+      'Full House!',
+      'Four Of A Kind!',
+      'Straight Flush!',
+      'Royal Flush!'
+    ]
+  end
+
+  def self.calculations(total1, total2)
+    int1 = Poker.counter(total1)
+    int2 = Poker.counter(total2)
+    result = Poker.postcount(total1, total2, int1, int2)
+    bet_result = total_bet[result]
+    [result, bet_result, int1, int2]
+  end
+
   def self.precount(c)
     total_suit1 = []
     total_value1 = []
@@ -75,7 +110,7 @@ class Poker
     else
       int = 0
     end
-end
+  end
 
   def self.postcount(total1, total2, int1, int2)
     total_value1 = []

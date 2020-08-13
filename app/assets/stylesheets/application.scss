@@ -15,3 +15,13 @@
  */
 
  @import "bootstrap/scss/bootstrap";
+
+ @font-face { 
+   font-family: 'Shadows Into Light'; 
+   src: font-url('ShadowsIntoLight-Regular.ttf');
+}
+
+h1 {
+font-family:'Shadows Into Light',cursive; 
+color: #777;
+}

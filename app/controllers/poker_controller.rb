@@ -73,7 +73,7 @@ class PokerController < ApplicationController
   end
 
   def flash_messages(int1, int2)
-    flash.now[:notice] = 'Casino: ' + Poker.poker_hands[int1]
-    flash.now[:warning] = 'You: ' + Poker.poker_hands[int2]
+    flash.now[:notice] = 'Casino: ' + Poker::HANDS[int1]
+    flash.now[:warning] = 'You: ' + Poker::HANDS[int2]
   end
 end

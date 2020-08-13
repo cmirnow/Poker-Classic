@@ -1,6 +1,6 @@
 class Poker
-  def self.total_bet
-    [
+
+    TOTAL_BET = [
       'You won this bet.',
       'You lost this bet.',
       'High card! You won this bet.',
@@ -9,10 +9,9 @@ class Poker
       'Kicker! You lost this bet.',
       'Split the pot.'
     ]
-  end
 
-  def self.poker_hands
-    [
+
+    HANDS = [
       'Nothing',
       'One Pair',
       'Two Pair!',
@@ -24,13 +23,12 @@ class Poker
       'Straight Flush!',
       'Royal Flush!'
     ]
-  end
 
   def self.calculations(total1, total2)
     int1 = Poker.counter(total1)
     int2 = Poker.counter(total2)
     result = Poker.postcount(total1, total2, int1, int2)
-    bet_result = total_bet[result]
+    bet_result = TOTAL_BET[result]
     [result, bet_result, int1, int2]
   end
 

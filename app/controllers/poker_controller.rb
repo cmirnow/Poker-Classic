@@ -72,8 +72,8 @@ class PokerController < ApplicationController
     flash.now[:error] = 'Fold. You bet $20.'
   end
 
-  def flash_messages(int1, int2)
-    flash.now[:notice] = 'Casino: ' + Poker::HANDS[int1]
-    flash.now[:warning] = 'You: ' + Poker::HANDS[int2]
+  def flash_messages(i1, i2)
+    flash.now[:notice] = 'Casino: ' + Poker::HANDS[i1]
+    flash.now[:warning] = 'You: ' + Poker::HANDS[i2]
   end
 end

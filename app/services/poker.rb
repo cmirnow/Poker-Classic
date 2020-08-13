@@ -1,54 +1,52 @@
 class Poker
+  TOTAL_BET = [
+    'You won this bet.',
+    'You lost this bet.',
+    'High card! You won this bet.',
+    'High card! You lost this bet.',
+    'Kicker! You won this bet.',
+    'Kicker! You lost this bet.',
+    'Split the pot.'
+  ].freeze
 
-    TOTAL_BET = [
-      'You won this bet.',
-      'You lost this bet.',
-      'High card! You won this bet.',
-      'High card! You lost this bet.',
-      'Kicker! You won this bet.',
-      'Kicker! You lost this bet.',
-      'Split the pot.'
-    ]
+  HANDS = [
+    'Nothing',
+    'One Pair',
+    'Two Pair!',
+    'Three Of A Kind!',
+    'Straight!',
+    'Flush!',
+    'Full House!',
+    'Four Of A Kind!',
+    'Straight Flush!',
+    'Royal Flush!'
+  ].freeze
 
-
-    HANDS = [
-      'Nothing',
-      'One Pair',
-      'Two Pair!',
-      'Three Of A Kind!',
-      'Straight!',
-      'Flush!',
-      'Full House!',
-      'Four Of A Kind!',
-      'Straight Flush!',
-      'Royal Flush!'
-    ]
-
-  def self.calculations(total1, total2)
-    int1 = Poker.counter(total1)
-    int2 = Poker.counter(total2)
-    result = Poker.postcount(total1, total2, int1, int2)
+  def self.calculations(*args)
+    i1 = Poker.counter(args[0])
+    i2 = Poker.counter(args[1])
+    result = Poker.postcount(args[0], args[1], i1, i2)
     bet_result = TOTAL_BET[result]
-    [result, bet_result, int1, int2]
+    [result, bet_result, i1, i2]
   end
 
-  def self.precount(c)
-    total_suit1 = []
-    total_value1 = []
-    c.each do |line1|
-      total_suit1 << line1.first
-      total_value1 << line1.split(',').last
+  def self.precount(t)
+    total_suit = []
+    total_value = []
+    t.each do |line|
+      total_suit << line.first
+      total_value << line.split(',').last
     end
 
     ind_doubl = []
-    total_value1.each_with_index.group_by { |f, _i| f }.each { |_k, v| v.map!(&:last) }.values.each do |line1|
-      if (total_suit1.uniq.count == 1) || (total_value1.map(&:to_i).sort.each_cons(2).all? { |x, y| y == x + 1 } == true) || (total_value1.map(&:to_i).sort == [2, 3, 4, 5, 14])
+    total_value.each_with_index.group_by { |f, _i| f }.each { |_k, v| v.map!(&:last) }.values.each do |line|
+      if (total_suit.uniq.count == 1) || (total_value.map(&:to_i).sort.each_cons(2).all? { |x, y| y == x + 1 } == true) || (total_value.map(&:to_i).sort == [2, 3, 4, 5, 14])
         ind_doubl = [0, 1, 2, 3, 4]
-      elsif line1.count > 1
-        ind_doubl << line1
+      elsif line.count > 1
+        ind_doubl << line
       end
     end
-    ind_doubl = ind_doubl.flatten
+    ind_doubl.flatten
   end
 
   def self.counter(t)
@@ -77,53 +75,56 @@ class Poker
 
     numVals = Array.new(numVals.values)
     numSuit = Array.new(numSuit.values)
+    get_poker_hands(numSuit, numVals, total_value)
+  end
 
+  def self.get_poker_hands(*args)
     # 'royal street flash'
-    if (numSuit.find_all { |x| numSuit.count(x) == 1 }).include?(5) && total_value.sort == [10, 11, 12, 13, 14]
+    if (args[0].find_all { |x| args[0].count(x) == 1 }).include?(5) && args[2].sort == [10, 11, 12, 13, 14]
       int = 9
     # 'street flash'
-    elsif (numSuit.find_all { |x| numSuit.count(x) == 1 }).include?(5) && total_value.sort.each_cons(2).all? { |x, y| y == x + 1 } == true
+    elsif (args[0].find_all { |x| args[0].count(x) == 1 }).include?(5) && args[2].sort.each_cons(2).all? { |x, y| y == x + 1 } == true
       int = 8
     # 'flash'
-    elsif (numSuit.find_all { |x| numSuit.count(x) == 1 }).include?(5)
+    elsif (args[0].find_all { |x| args[0].count(x) == 1 }).include?(5)
       int = 5
     # 'two_pairs'
-    elsif (numVals.find_all { |x| numVals.count(x) > 1 }).include?(2)
+    elsif (args[1].find_all { |x| args[1].count(x) > 1 }).include?(2)
       int = 2
     # 'care'
-    elsif (numVals.find_all { |x| numVals.count(x) == 1 }).include?(4)
+    elsif (args[1].find_all { |x| args[1].count(x) == 1 }).include?(4)
       int = 7
     # 'fullhouse'
-    elsif (numVals.find_all { |x| numVals.count(x) == 1 }).include?(2) && (numVals.find_all { |x| numVals.count(x) == 1 }).include?(3)
+    elsif (args[1].find_all { |x| args[1].count(x) == 1 }).include?(2) && (args[1].find_all { |x| args[1].count(x) == 1 }).include?(3)
       int = 6
     # 'set'
-    elsif (numVals.find_all { |x| numVals.count(x) == 1 }).include?(3)
+    elsif (args[1].find_all { |x| args[1].count(x) == 1 }).include?(3)
       int = 3
     # 'pair'
-    elsif (numVals.find_all { |x| numVals.count(x) == 1 }).include?(2)
+    elsif (args[1].find_all { |x| args[1].count(x) == 1 }).include?(2)
       int = 1
     # 'street'
-    elsif (total_value.sort.each_cons(2).all? { |x, y| y == x + 1 } == true) || (total_value.sort == [2, 3, 4, 5, 14])
+    elsif (args[2].sort.each_cons(2).all? { |x, y| y == x + 1 } == true) || (args[2].sort == [2, 3, 4, 5, 14])
       int = 4
     else
       int = 0
     end
   end
 
-  def self.postcount(total1, total2, int1, int2)
+  def self.postcount(*args)
     total_value1 = []
     total_value2 = []
-    total1.each do |line|
+    args[0].each do |line|
       total_value1 << line.split(',').last
     end
-    total2.each do |line|
+    args[1].each do |line|
       total_value2 << line.split(',').last
     end
-    if int1 < int2
+    if args[2] < args[3]
       result = 0 # flash[:notice] = 'You won this bet!'
-    elsif int1 > int2
+    elsif args[2] > args[3]
       result = 1 # flash[:error] = 'You lost this bet.'
-    elsif int1 == int2 && [0, 4, 5, 8, 9].include?(int1)
+    elsif args[2] == args[3] && [0, 4, 5, 8, 9].include?(args[2])
 
       arr = []
       total_value1.map(&:to_i).sort.reverse.zip(total_value2.map(&:to_i).sort.reverse).each do |line|
@@ -140,7 +141,7 @@ class Poker
                else
                  6
                end
-    elsif int1 == int2 && [1, 3, 2, 6, 7].include?(int1)
+    elsif args[2] == args[3] && [1, 3, 2, 6, 7].include?(args[2])
       def Poker.duplicate_count(array)
         array.each_with_object(Hash.new(0)) do |value, hash|
           hash[value] += 1

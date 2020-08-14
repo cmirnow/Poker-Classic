@@ -111,6 +111,49 @@ class Poker
     end
   end
 
+  def self.duplicate_count(array)
+    array.each_with_object(Hash.new(0)) do |value, hash|
+      hash[value] += 1
+    end.each_with_object([]) do |(value, count), result|
+      result << value if count > 1
+    end
+  end
+
+  def self.compare(*args)
+    if Poker.duplicate_count(args[0].map(&:to_i)).max < Poker.duplicate_count(args[1].map(&:to_i)).max
+      result = 2
+    elsif Poker.duplicate_count(args[0].map(&:to_i)).max > Poker.duplicate_count(args[1].map(&:to_i)).max
+      result = 3
+    elsif Poker.duplicate_count(args[0].map(&:to_i)).min < Poker.duplicate_count(args[1].map(&:to_i)).min
+      result = 2
+    elsif Poker.duplicate_count(args[0].map(&:to_i)).min > Poker.duplicate_count(args[1].map(&:to_i)).min
+      result = 3
+    else
+      part1 = args[0].map(&:to_i)
+      part2 = args[1].map(&:to_i)
+      full1 = Poker.duplicate_count(args[0].map(&:to_i))
+      full2 = Poker.duplicate_count(args[1].map(&:to_i))
+
+      arr = []
+      a = ((part1 - full1) | (full1 - part1)).sort.reverse
+      b = ((part2 - full2) | (full2 - part2)).sort.reverse
+      a.zip(b).each do |line|
+        if line.first < line.last
+          arr << 1
+        elsif line.first > line.last
+          arr << 0
+        end
+      end
+      result = if arr.first == 1
+                 4
+               elsif arr.first == 0
+                 5
+               else
+                 6
+       end
+    end
+  end
+
   def self.postcount(*args)
     total_value1 = []
     total_value2 = []
@@ -142,46 +185,9 @@ class Poker
                  6
                end
     elsif args[2] == args[3] && [1, 3, 2, 6, 7].include?(args[2])
-      def Poker.duplicate_count(array)
-        array.each_with_object(Hash.new(0)) do |value, hash|
-          hash[value] += 1
-        end.each_with_object([]) do |(value, count), result|
-          result << value if count > 1
-        end
-      end
 
-      if Poker.duplicate_count(total_value1.map(&:to_i)).max < Poker.duplicate_count(total_value2.map(&:to_i)).max
-        result = 2
-      elsif Poker.duplicate_count(total_value1.map(&:to_i)).max > Poker.duplicate_count(total_value2.map(&:to_i)).max
-        result = 3
-      elsif Poker.duplicate_count(total_value1.map(&:to_i)).min < Poker.duplicate_count(total_value2.map(&:to_i)).min
-        result = 2
-      elsif Poker.duplicate_count(total_value1.map(&:to_i)).min > Poker.duplicate_count(total_value2.map(&:to_i)).min
-        result = 3
-      else
-        part1 = total_value1.map(&:to_i)
-        part2 = total_value2.map(&:to_i)
-        full1 = Poker.duplicate_count(total_value1.map(&:to_i))
-        full2 = Poker.duplicate_count(total_value2.map(&:to_i))
+      compare(total_value1, total_value2)
 
-        arr = []
-        a = ((part1 - full1) | (full1 - part1)).sort.reverse
-        b = ((part2 - full2) | (full2 - part2)).sort.reverse
-        a.zip(b).each do |line|
-          if line.first < line.last
-            arr << 1
-          elsif line.first > line.last
-            arr << 0
-          end
-        end
-        result = if arr.first == 1
-                   4
-                 elsif arr.first == 0
-                   5
-                 else
-                   6
-         end
-      end
     end
   end
 end

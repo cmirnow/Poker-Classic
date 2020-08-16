@@ -35,23 +35,29 @@ class PokerController < ApplicationController
 
     if (params[:secondroll] == '0') || params[:secondroll].nil?
       @ind_doubl = Poker.precount(@total1)
-      @cash = if params[:cash].nil?
-                100
-              else
-                params[:cash]
-              end
+      @cash = get_cash(params[:cash])
+    else
+      showdown_or_fold?(params[:yesno], params[:cash], @total1, @total2)
     end
+  end
 
-    if params[:secondroll] == '1'
-      if params[:yesno] == 'showdown'
-        arr = Poker.calculations(@total1, @total2)
-        flash_poker_hands(arr[2], arr[3])
-        flash_result_of_bet(arr[0], arr[1])
-        @cash = Poker.cash(arr[0], params[:cash])
-      elsif params[:yesno] == 'fold'
-        flash_if_fold
-        @cash = Poker.cash_if_fold(params[:cash])
-      end
+  def get_cash(t)
+    if t.nil?
+      100
+    else
+      t
+    end
+  end
+
+  def showdown_or_fold?(*args)
+    if args[0] == 'showdown'
+      arr = Poker.calculations(args[2], args[3])
+      flash_poker_hands(arr[2], arr[3])
+      flash_result_of_bet(arr[0], arr[1])
+      @cash = Poker.cash(arr[0], args[1])
+    elsif args[0] == 'fold'
+      flash_if_fold
+      @cash = Poker.cash_if_fold(args[1])
     end
   end
 

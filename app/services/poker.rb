@@ -154,6 +154,18 @@ class Poker
     end
   end
 
+  def self.cash(*args)
+    if args[0].odd?
+      args[1].to_i - 40
+    else
+      args[1].to_i + 40
+    end
+  end
+
+  def self.cash_if_fold(*args)
+    args[0].to_i - 20
+  end
+
   def self.postcount(*args)
     total_value1 = []
     total_value2 = []

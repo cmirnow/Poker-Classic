@@ -45,34 +45,29 @@ class PokerController < ApplicationController
     if params[:secondroll] == '1'
       if params[:yesno] == 'showdown'
         arr = Poker.calculations(@total1, @total2)
-        flash_messages(arr[2], arr[3])
-        @cash = cash(arr[0], arr[1], params[:cash])
+        flash_poker_hands(arr[2], arr[3])
+        flash_result_of_bet(arr[0], arr[1])
+        @cash = Poker.cash(arr[0], params[:cash])
       elsif params[:yesno] == 'fold'
-        @cash = cash_if_fold(params[:cash])
+        flash_if_fold
+        @cash = Poker.cash_if_fold(params[:cash])
       end
     end
   end
 
-  def cash(result, bet_result, params_cash)
+  def flash_result_of_bet(result, bet_result)
     if result.odd?
       flash.now[:error] = bet_result
-      params_cash.to_i - 40
     else
       flash.now[:success] = bet_result
-      params_cash.to_i + 40
     end
-  end
-
-  def cash_if_fold(params_cash)
-    flash_if_fold
-    params_cash.to_i - 20
   end
 
   def flash_if_fold
     flash.now[:error] = 'Fold. You bet $20.'
   end
 
-  def flash_messages(i1, i2)
+  def flash_poker_hands(i1, i2)
     flash.now[:notice] = 'Casino: ' + Poker::HANDS[i1]
     flash.now[:warning] = 'You: ' + Poker::HANDS[i2]
   end

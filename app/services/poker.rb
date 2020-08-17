@@ -162,6 +162,14 @@ class Poker
     end
   end
 
+  def self.get_cash(t)
+    if t.nil?
+      100
+    else
+      t
+    end
+  end
+
   def self.cash_if_fold(*args)
     args[0].to_i - 20
   end

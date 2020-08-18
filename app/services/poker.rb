@@ -91,15 +91,20 @@ class Poker
     ind_doubl.flatten
   end
 
-  def self.counter(t)
+  def self.counter_helper(t)
     total_suit = []
     total_value = []
-    t.each do |line|
-      total_suit << line.first
-      total_value << line.split(',').last
+    t.each do |x|
+      total_suit << x.first
+      total_value << x.split(',').last
     end
+    [total_suit, total_value]
+  end
 
-    total_value = total_value.map(&:to_i)
+  def self.counter(t)
+    x = Poker.counter_helper(t)
+
+    total_value = x[1].map(&:to_i)
     numVals = Hash.new(0)
     (2..14).each do |theval|
       (0..4).each do |dienum|
@@ -107,7 +112,7 @@ class Poker
       end
     end
 
-    total_suit = total_suit.map(&:to_i)
+    total_suit = x[0].map(&:to_i)
     numSuit = Hash.new(0)
     (1..4).each do |theval|
       (0..4).each do |dienum|

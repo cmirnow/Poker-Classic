@@ -22,6 +22,48 @@ class Poker
     'Royal Flush!'
   ].freeze
 
+  def self.get_cards(*args)
+    cards = []
+    while cards.length < 10
+      x = CardComparable.new
+      if args[0].present?
+        unless args[0].include?("#{x.suit},#{x.value}")
+          cards << x unless args[1].include?("#{x.suit},#{x.value}")
+      end
+      else
+        cards << x
+      end
+      cards = cards.uniq
+    end
+    cards
+  end
+
+  def self.first_player_cards(*args)
+    card1 = args[0][0..4]
+    total1 = []
+    card1.each_with_index do |line, index|
+      total1 << if args[1].present? && args[1][index.to_s].present?
+                  args[1][index.to_s]
+                else
+                  "#{line.suit},#{line.value}"
+    end
+    end
+    total1
+  end
+
+  def self.second_player_cards(*args)
+    card2 = args[0][5..9]
+    total2 = []
+    card2.each_with_index do |line, index|
+      total2 << if args[1].present? && args[1][index.to_s].present?
+                  args[1][index.to_s]
+                else
+                  "#{line.suit},#{line.value}"
+    end
+    end
+    total2
+  end
+
   def self.calculations(*args)
     i1 = Poker.counter(args[0])
     i2 = Poker.counter(args[1])

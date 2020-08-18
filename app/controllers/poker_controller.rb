@@ -1,37 +1,8 @@
 class PokerController < ApplicationController
   def index
-    card = []
-    while card.length < 10
-      d = CardComparable.new
-      if params[:array_card1].present?
-        unless params[:array_card1].include?("#{d.suit},#{d.value}")
-          card << d unless params[:array_card2].include?("#{d.suit},#{d.value}")
-      end
-      else
-        card << d
-      end
-      card = card.uniq
-    end
-
-    card1 = card[0..4]
-    @total1 = []
-    card1.each_with_index do |line, index|
-      @total1 << if params[:keepit1].present? && params[:keepit1][index.to_s].present?
-                   params[:keepit1][index.to_s]
-                 else
-                   "#{line.suit},#{line.value}"
-    end
-    end
-
-    card2 = card[5..9]
-    @total2 = []
-    card2.each_with_index do |line, index|
-      @total2 << if params[:keepit2].present? && params[:keepit2][index.to_s].present?
-                   params[:keepit2][index.to_s]
-                 else
-                   "#{line.suit},#{line.value}"
-    end
-    end
+    card = Poker.get_cards(params[:array_card1], params[:array_card2])
+    @total1 = Poker.first_player_cards(card, params[:keepit1])
+    @total2 = Poker.second_player_cards(card, params[:keepit2])
 
     if (params[:secondroll] == '0') || params[:secondroll].nil?
       @ind_doubl = Poker.precount(@total1)

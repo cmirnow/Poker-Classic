@@ -1,8 +1,8 @@
 class PokerController < ApplicationController
   def index
-    card = Poker.get_cards(params[:array_card1], params[:array_card2])
-    @total1 = Poker.first_player_cards(card, params[:keepit1])
-    @total2 = Poker.second_player_cards(card, params[:keepit2])
+    cards = Poker.get_cards(params[:array_card1], params[:array_card2])
+    @total1 = Poker.first_player_cards(cards, params[:keepit1])
+    @total2 = Poker.second_player_cards(cards, params[:keepit2])
 
     if (params[:secondroll] == '0') || params[:secondroll].nil?
       @ind_doubl = Poker.precount(@total1)

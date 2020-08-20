@@ -41,11 +41,11 @@ class Poker
   def self.first_player_cards(*args)
     card1 = args[0][0..4]
     total1 = []
-    card1.each_with_index do |line, index|
+    card1.each_with_index do |x, index|
       total1 << if args[1].present? && args[1][index.to_s].present?
                   args[1][index.to_s]
                 else
-                  "#{line.suit},#{line.value}"
+                  "#{x.suit},#{x.value}"
     end
     end
     total1
@@ -54,11 +54,11 @@ class Poker
   def self.second_player_cards(*args)
     card2 = args[0][5..9]
     total2 = []
-    card2.each_with_index do |line, index|
+    card2.each_with_index do |x, index|
       total2 << if args[1].present? && args[1][index.to_s].present?
                   args[1][index.to_s]
                 else
-                  "#{line.suit},#{line.value}"
+                  "#{x.suit},#{x.value}"
     end
     end
     total2
@@ -75,20 +75,20 @@ class Poker
   def self.precount(t)
     total_suit = []
     total_value = []
-    t.each do |line|
-      total_suit << line.first
-      total_value << line.split(',').last
+    arr = []
+    t.each do |x|
+      total_suit << x.first
+      total_value << x.split(',').last
     end
 
-    ind_doubl = []
-    total_value.each_with_index.group_by { |f, _i| f }.each { |_k, v| v.map!(&:last) }.values.each do |line|
+    total_value.each_with_index.group_by { |f, _i| f }.each { |_k, v| v.map!(&:last) }.values.each do |x|
       if (total_suit.uniq.count == 1) || (total_value.map(&:to_i).sort.each_cons(2).all? { |x, y| y == x + 1 } == true) || (total_value.map(&:to_i).sort == [2, 3, 4, 5, 14])
-        ind_doubl = [0, 1, 2, 3, 4]
-      elsif line.count > 1
-        ind_doubl << line
+        arr = [0, 1, 2, 3, 4]
+      elsif x.count > 1
+        arr << x
       end
     end
-    ind_doubl.flatten
+    arr.flatten
   end
 
   def self.counter_helper(t)
@@ -184,10 +184,10 @@ class Poker
       arr = []
       a = ((part1 - full1) | (full1 - part1)).sort.reverse
       b = ((part2 - full2) | (full2 - part2)).sort.reverse
-      a.zip(b).each do |line|
-        if line.first < line.last
+      a.zip(b).each do |x|
+        if x.first < x.last
           arr << 1
-        elsif line.first > line.last
+        elsif x.first > x.last
           arr << 0
         end
       end
@@ -201,7 +201,7 @@ class Poker
     end
   end
 
-  def self.cash(*args)
+  def self.cash_to_win_or_lose?(*args)
     if args[0].odd?
       args[1].to_i - 40
     else
@@ -224,11 +224,11 @@ class Poker
   def self.postcount(*args)
     total_value1 = []
     total_value2 = []
-    args[0].each do |line|
-      total_value1 << line.split(',').last
+    args[0].each do |x|
+      total_value1 << x.split(',').last
     end
-    args[1].each do |line|
-      total_value2 << line.split(',').last
+    args[1].each do |x|
+      total_value2 << x.split(',').last
     end
     if args[2] < args[3]
       result = 0 # flash[:notice] = 'You won this bet!'
@@ -237,10 +237,10 @@ class Poker
     elsif args[2] == args[3] && [0, 4, 5, 8, 9].include?(args[2])
 
       arr = []
-      total_value1.map(&:to_i).sort.reverse.zip(total_value2.map(&:to_i).sort.reverse).each do |line|
-        if line.first < line.last
+      total_value1.map(&:to_i).sort.reverse.zip(total_value2.map(&:to_i).sort.reverse).each do |x|
+        if x.first < x.last
           arr << 1
-        elsif line.first > line.last
+        elsif x.first > x.last
           arr << 0
         end
       end

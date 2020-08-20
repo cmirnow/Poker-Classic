@@ -17,7 +17,7 @@ class PokerController < ApplicationController
       arr = Poker.calculations(args[2], args[3])
       flash_poker_hands(arr[2], arr[3])
       flash_result_of_bet(arr[0], arr[1])
-      @cash = Poker.cash(arr[0], args[1])
+      @cash = Poker.cash_to_win_or_lose?(arr[0], args[1])
     elsif args[0] == 'fold'
       flash_if_fold
       @cash = Poker.cash_if_fold(args[1])

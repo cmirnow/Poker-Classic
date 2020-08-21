@@ -15,8 +15,7 @@ class PokerController < ApplicationController
   def showdown_or_fold?(*args)
     if args[0] == 'showdown'
       arr = Poker.calculations(args[2], args[3])
-      flash_poker_hands(arr[2], arr[3])
-      flash_result_of_bet(arr[0], arr[1])
+      flash_result_of_bet(arr[0], arr[1], arr[2], arr[3])
       @cash = Poker.cash_to_win_or_lose?(arr[0], args[1])
     elsif args[0] == 'fold'
       flash_if_fold
@@ -24,20 +23,17 @@ class PokerController < ApplicationController
     end
   end
 
-  def flash_result_of_bet(result, bet_result)
-    if result.odd?
-      flash.now[:error] = bet_result
+  def flash_result_of_bet(*args)
+    flash.now[:notice] = 'Casino: ' + Poker::HANDS[args[2]]
+    flash.now[:warning] = 'You: ' + Poker::HANDS[args[3]]
+    if args[0].odd?
+      flash.now[:error] = args[1]
     else
-      flash.now[:success] = bet_result
+      flash.now[:success] = args[1]
     end
   end
 
   def flash_if_fold
     flash.now[:error] = 'Fold. You bet $20.'
-  end
-
-  def flash_poker_hands(i1, i2)
-    flash.now[:notice] = 'Casino: ' + Poker::HANDS[i1]
-    flash.now[:warning] = 'You: ' + Poker::HANDS[i2]
   end
 end

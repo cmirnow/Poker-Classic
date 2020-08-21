@@ -26,22 +26,22 @@
    <table class="table-responsive table-bordered" style="background-color: #357d35;">
       <tbody>
          <tr>
-            <% @total1.each_with_index do |line1, index| %>
+            <% @cards1.each_with_index do |x, index| %>
             <td>
                <% if params[:secondroll] == "0" or params[:secondroll].nil? %>
                <ul data-liffect="starwars">
                   <li><% concat image_tag("/images/underside.png", :class => "img-fluid") %></li>
                </ul>
                <% @secondroll = "1" %>
-               <% if @ind_doubl.include? index %>
-               <input type='checkbox' class="rounded mx-auto d-block" onclick="return false" checked="checked" name='keepit1[<%= index %>]' value='<%= line1 %>'>
+               <% if @first_hand_combination.include? index %>
+               <input type='checkbox' class="rounded mx-auto d-block" onclick="return false" checked="checked" name='keepit1[<%= index %>]' value='<%= x %>'>
                <% else %>
-               <input type='checkbox' class="rounded mx-auto d-block" disabled="disabled" name='keepit1[<%= index %>]' value='<%= line1 %>'>
+               <input type='checkbox' class="rounded mx-auto d-block" disabled="disabled" name='keepit1[<%= index %>]' value='<%= x %>'>
                <% end %>
-               <%= hidden_field_tag :array_card1, @total1 %>
+               <%= hidden_field_tag :array_card1, @cards1 %>
                <% else %>
                <ul data-liffect="zoomOut">
-                  <li><% concat image_tag("/images/#{line1.first}/#{line1.split(",").last}.png", :class => "img-fluid") %></li>
+                  <li><% concat image_tag("/images/#{x.first}/#{x.split(",").last}.png", :class => "img-fluid") %></li>
                </ul>
                <% end %>
             </td>
@@ -49,15 +49,15 @@
          </tr>
          <% if params[:yesno] == 'showdown' or params[:secondroll] != "1" %>
          <tr>
-            <% @total2.each_with_index do |line2, index| %>
+            <% @cards2.each_with_index do |x, index| %>
             <td>
                <ul data-liffect="zoomOut">
-                  <li><% concat image_tag("/images/#{line2.first}/#{line2.split(",").last}.png", :class => "img-fluid") %></li>
+                  <li><% concat image_tag("/images/#{x.first}/#{x.split(",").last}.png", :class => "img-fluid") %></li>
                </ul>
                <% if params[:secondroll] == "0" or params[:secondroll].nil? %>
                <% @secondroll = "1" %>
-               <%= hidden_field_tag :array_card2, @total2 %>
-               <input type='checkbox' class="rounded mx-auto d-block" name='keepit2[<%= index %>]' value='<%= line2 %>'>
+               <%= hidden_field_tag :array_card2, @cards2 %>
+               <input type='checkbox' class="rounded mx-auto d-block" name='keepit2[<%= index %>]' value='<%= x %>'>
                <% end %>
             </td>
             <% end %>

@@ -1,14 +1,14 @@
 class PokerController < ApplicationController
   def index
     cards = Poker.get_cards(params[:array_card1], params[:array_card2])
-    @total1 = Poker.first_player_cards(cards, params[:keepit1])
-    @total2 = Poker.second_player_cards(cards, params[:keepit2])
+    @cards1 = Poker.first_player_cards(cards, params[:keepit1])
+    @cards2 = Poker.second_player_cards(cards, params[:keepit2])
 
     if (params[:secondroll] == '0') || params[:secondroll].nil?
-      @ind_doubl = Poker.precount(@total1)
+      @first_hand_combination = Poker.precount(@cards1)
       @cash = Poker.get_cash(params[:cash])
     else
-      showdown_or_fold?(params[:yesno], params[:cash], @total1, @total2)
+      showdown_or_fold?(params[:yesno], params[:cash], @cards1, @cards2)
     end
   end
 
